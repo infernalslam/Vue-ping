@@ -21,7 +21,7 @@ app.use(express.static('dist'))
 var result = []
 var single = []
 app.post('/urlping', function (req, res) {
-	let host = []
+	var host = []
 	single = []
 	host.push(req.body.url)
 	host.forEach(function (host) {

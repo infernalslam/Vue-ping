@@ -2,7 +2,7 @@
   <div id="app">
     <input-view :ping="ping"></input-view>
     <!-- <view-list :pingList="pingList" :clear="clear" :sub="sub"></view-list> -->
-    <graph-view :singleList="single"></graph-view>
+    <graph-view :singleList="single" :sub="sub"></graph-view>
   </div>
 </template>
 
@@ -32,22 +32,22 @@ export default {
   methods: {
     ping (url) {
       let data = { url: url }
-      this.$http.post('http://localhost:4000/urlping', data).then(res => {})
+      this.$http.post('/urlping', data).then(res => {})
       setTimeout(() => {
         this.singleList(url)
       }, 3000)
     },
     singleList (url) {
-      this.$http.get('http://localhost:4000/api/single').then(res => {
+      this.$http.get('/api/single').then(res => {
         this.single = res.data
         console.log(this.single)
       })
     },
     getList () {
-      this.$http.get('http://localhost:4000/api/data').then(res => { this.pingList = res.data })
+      this.$http.get('/api/data').then(res => { this.pingList = res.data })
     },
     clear (id) {
-      this.$http.delete('http://localhost:4000/api/del/' + id).then(res => { this.getList() })
+      this.$http.delete('/api/del/' + id).then(res => { this.getList() })
     },
     sub (str) {
       let text = str.trim()
@@ -57,6 +57,7 @@ export default {
       let parameter = max.substr(maxstr, max.length).split('=')
       let parametertoNumber = parameter.join().split(',')
       console.log(parametertoNumber)
+      return parametertoNumber
     }
   }
 }

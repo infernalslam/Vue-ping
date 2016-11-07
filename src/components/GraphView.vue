@@ -3,7 +3,7 @@
 		<div v-for="show in singleList">
 			{{show.data.host}} <br>
 			{{show.data.alive}} <br>
-			{{show.data.output}} <br>
+			{{sub(show.data.output)}} <br>
 			{{show.data.time}} <hr>
 		</div>
 	</div>
@@ -12,6 +12,6 @@
 <script>
 export default {
   name: 'GraphView',
-  props: ['singleList']
+  props: ['singleList', 'sub']
 }
 </script>
