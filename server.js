@@ -19,10 +19,10 @@ app.use(express.static('dist'))
 
 
 var result = []
-
-
+var single = []
 app.post('/urlping', function (req, res) {
 	let host = []
+	single = []
 	host.push(req.body.url)
 	host.forEach(function (host) {
 		ping.promise.probe(host, { timeout: 10 }).then(function (res) { 
@@ -30,7 +30,8 @@ app.post('/urlping', function (req, res) {
 				id: Date.now(),
 				data: res
 			}
-			result.push(data) 
+			result.push(data)
+			single.push(data)
 		})
 	})
 	if (req.body.url) res.send('ok url loading ping : www.' + req.body.url)
@@ -39,6 +40,9 @@ app.post('/urlping', function (req, res) {
 
 app.get('/api/data', function (req, res) {
 	res.send(result)
+})
+app.get('/api/single', function (req, res) {
+	res.send(single)
 })
 
 
