@@ -26,7 +26,7 @@ app.post('/urlping', function (req, res) {
 	host.push(req.body.url)
 	host.forEach(function (host) {
 		ping.promise.probe(host, { timeout: 10 }).then(function (res) { 
-			let data = {
+			var data = {
 				id: Date.now(),
 				data: res
 			}
@@ -47,7 +47,7 @@ app.get('/api/single', function (req, res) {
 
 
 app.delete('/api/del/:id', function (req, res) {
-	let index = result.findIndex(item => item.id === parseInt(req.params.id))
+	var index = result.findIndex(item => item.id === parseInt(req.params.id))
 	result.splice(index, 1)
   	res.send('DELETE request id : ' + req.params.id)
 })
