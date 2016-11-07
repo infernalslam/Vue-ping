@@ -2,7 +2,7 @@
   <div id="app">
     <input-view :ping="ping"></input-view>
     <!-- <view-list :pingList="pingList" :clear="clear" :sub="sub"></view-list> -->
-    <graph-view :singleList="singleList"></graph-view>
+    <graph-view :singleList="single"></graph-view>
   </div>
 </template>
 
@@ -16,7 +16,7 @@ export default {
     return {
       url: '',
       pingList: [],
-      singleList: []
+      single: []
     }
   },
   mounted () {
@@ -33,10 +33,15 @@ export default {
     ping (url) {
       let data = { url: url }
       this.$http.post('http://localhost:4000/urlping', data).then(res => {})
-      this.singleList(url)
+      setTimeout(() => {
+        this.singleList(url)
+      }, 3000)
     },
     singleList (url) {
-      this.$http.get('http://localhost:4000/api/single').then(res => { this.singleList = res.data })
+      this.$http.get('http://localhost:4000/api/single').then(res => {
+        this.single = res.data
+        console.log(this.single)
+      })
     },
     getList () {
       this.$http.get('http://localhost:4000/api/data').then(res => { this.pingList = res.data })
@@ -58,12 +63,5 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
