@@ -9,11 +9,11 @@ app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE')
   next()
 })
-
+app.use(express.static('dist'))
 app.use(bodyParser.json())
 app.set('port', (process.env.PORT || 4000))
 app.use(bodyParser.urlencoded({extended: false}))
-app.use(express.static('dist'))
+
 
 
 
