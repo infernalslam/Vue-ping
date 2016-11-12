@@ -25,7 +25,7 @@ app.post('/urlping', function (req, res) {
 	single = []
 	host.push(req.body.url)
 	host.forEach(function (host) {
-		ping.promise.probe(host, { timeout: 10 }).then(function (res) { 
+		ping.promise.probe(host, { timeout: 80 }).then(function (res) { 
 			var data = {
 				id: Date.now(),
 				data: res

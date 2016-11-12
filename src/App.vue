@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-
     <div class="container">
       <div class="row">
         <div class="col-xs-12"><input-view :ping="ping"></input-view></div>
@@ -8,7 +7,7 @@
       <div class="row">
         <div class="col-xs-4"><view-list :pingList="pingList" :clear="clear" :momentJs="momentJs"></view-list></div>
         <div class="col-xs-4"><graph-view :singleList="single" :messengerAlert="messengerAlert"></graph-view></div>
-        <div class="col-xs-4"></div>
+        <div class="col-xs-4"><div id='myChart'></div></div>
       </div>
     </div>
   </div>
@@ -18,7 +17,8 @@
 import InputView from './components/InputView'
 import ViewList from './components/ViewList'
 import GraphView from './components/GraphView'
-/* global moment */
+// import Chart from 'chart.js'
+/* global moment, zingchart */
 export default {
   name: 'app',
   data () {
@@ -30,9 +30,21 @@ export default {
     }
   },
   mounted () {
+    let vm = this
     setInterval(() => {
-      this.getList()
+      vm.getList()
     }, 4000)
+    zingchart.render({
+      id: 'myChart',
+      data: {
+        type: 'line',
+        series: [{
+          values: [54, 23, 34, 23, 43]
+        }, {
+          values: [10, 15, 16, 20, 40]
+        }]
+      }
+    })
   },
   components: {
     InputView,
@@ -51,9 +63,11 @@ export default {
         data = { url: checkUrl[0] }
         console.log('www name host')
       }
-      this.$http.post('http://localhost:4000/urlping', data).then(res => {})
+      this.$http.post('http://localhost:4000/urlping/', data).then(res => {})
+      var vm = this
       setTimeout(() => {
-        this.singleList(url)
+        vm.singleList(url)
+        vm.buildChart()
       }, 2000)
     },
     singleList (url) {
