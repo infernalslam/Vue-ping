@@ -5,9 +5,15 @@
         <div class="col-xs-12"><input-view :ping="ping"></input-view></div>
       </div>
       <div class="row">
-        <div class="col-xs-4"><view-list :pingList="pingList" :clear="clear" :momentJs="momentJs"></view-list></div>
-        <div class="col-xs-4"><graph-view :singleList="single" :messengerAlert="messengerAlert"></graph-view></div>
-        <div class="col-xs-4"><div id='myChart'></div></div>
+      		  <div class="aspect-ratio">
+		    <canvas id="chart"></canvas>
+		  </div>
+		</div>
+	     <div class="row">
+	        <div class="col-xs-4"><view-list :pingList="pingList" :clear="clear" :momentJs="momentJs"></view-list></div>
+	        <div class="col-xs-4"><graph-view :singleList="single" :messengerAlert="messengerAlert"></graph-view></div>
+	        <div class="col-xs-4"><div id='myChart'></div></div>
+      </div>
       </div>
     </div>
   </div>
@@ -18,7 +24,23 @@ import InputView from './components/InputView'
 import ViewList from './components/ViewList'
 import GraphView from './components/GraphView'
 // import Chart from 'chart.js'
-/* global moment, zingchart */
+/* global moment, Chart */
+Chart.defaults.global.animationEasing = 'easeInOutQuad'
+Chart.defaults.global.responsive = true
+Chart.defaults.global.scaleOverride = true
+Chart.defaults.global.scaleShowLabels = false
+Chart.defaults.global.scaleSteps = 10
+Chart.defaults.global.scaleStepWidth = 10
+Chart.defaults.global.scaleStartValue = 0
+Chart.defaults.global.tooltipFontFamily = 'Open Sans'
+Chart.defaults.global.tooltipFillColor = '#FFFFFF'
+Chart.defaults.global.tooltipFontColor = '#6E6E6E'
+Chart.defaults.global.tooltipCaretSize = 0
+Chart.defaults.global.maintainAspectRatio = true
+Chart.defaults.Line.scaleShowHorizontalLines = false
+Chart.defaults.Line.scaleShowHorizontalLines = false
+Chart.defaults.Line.scaleGridLineColor = '#55505C'
+Chart.defaults.Line.scaleLineColor = '#55505C'
 export default {
   name: 'app',
   data () {
@@ -34,17 +56,29 @@ export default {
     setInterval(() => {
       vm.getList()
     }, 4000)
-    zingchart.render({
-      id: 'myChart',
-      data: {
-        type: 'line',
-        series: [{
-          values: [54, 23, 34, 23, 43]
-        }, {
-          values: [10, 15, 16, 20, 40]
-        }]
-      }
-    })
+    var chart = document.getElementById('chart').getContext('2d')
+    var gradient = chart.createLinearGradient(0, 0, 0, 450)
+    var data = {
+      labels: [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June' ],
+
+      datasets: [
+        {
+          label: 'Custom Label Name',
+          fillColor: gradient,
+          strokeColor: '#FC2525',
+          pointColor: 'white',
+          pointStrokeColor: 'rgba(220,220,220,1)',
+          pointHighlightFill: '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data: [65, 59, 80, 81, 56, 55]
+        }
+      ]
+    }
+    gradient.addColorStop(0, 'rgba(255, 0,0, 0.5)')
+    gradient.addColorStop(0.5, 'rgba(255, 0, 0, 0.25)')
+    gradient.addColorStop(1, 'rgba(255, 0, 0, 0)')
+
+    chart = new Chart(chart).Line(data)
   },
   components: {
     InputView,
@@ -106,6 +140,28 @@ export default {
 
 <style>
 body {
-  background-color: #252320;
+  /*background-color: #252320*/
+  background-color: #252329;
 }
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+/*html {
+  box-sizing: border-box;
+  background: #252329;
+}*/
+
+.l-chart {
+  padding: 20px;
+  background: #252329;
+}
+
+.aspect-ratio {
+  height: 0;
+  padding-bottom: 50%;
+  /* 495h / 990w : The Intended dimensions */
+}
+
 </style>
