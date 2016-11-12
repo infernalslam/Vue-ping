@@ -41,6 +41,7 @@ app.post('/urlping', function (req, res) {
 app.get('/api/data', function (req, res) {
 	res.send(result)
 })
+
 app.get('/api/single', function (req, res) {
 	res.send(single)
 })

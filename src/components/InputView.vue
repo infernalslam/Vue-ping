@@ -1,8 +1,8 @@
 <template>
   <div>
     <form @submit.prevent="ping(url)">
-    <span class="text-title">https</span>
-    <span class="text-title2">://www.</span>
+    <span class="text-title">URLs</span>
+    <!-- <span class="text-title2">://www.</span> -->
     <input type="text" class="search" v-model="url">
     <button class="btn-sub">Ping</button>
   </form>

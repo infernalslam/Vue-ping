@@ -56,29 +56,29 @@ export default {
     setInterval(() => {
       vm.getList()
     }, 4000)
-    var chart = document.getElementById('chart').getContext('2d')
-    var gradient = chart.createLinearGradient(0, 0, 0, 450)
-    var data = {
-      labels: [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June' ],
+    // var chart = document.getElementById('chart').getContext('2d')
+    // var gradient = chart.createLinearGradient(0, 0, 0, 450)
+    // var data = {
+    //   labels: [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June' ],
 
-      datasets: [
-        {
-          label: 'Custom Label Name',
-          fillColor: gradient,
-          strokeColor: '#FC2525',
-          pointColor: 'white',
-          pointStrokeColor: 'rgba(220,220,220,1)',
-          pointHighlightFill: '#fff',
-          pointHighlightStroke: 'rgba(220,220,220,1)',
-          data: [65, 59, 80, 81, 56, 55]
-        }
-      ]
-    }
-    gradient.addColorStop(0, 'rgba(255, 0,0, 0.5)')
-    gradient.addColorStop(0.5, 'rgba(255, 0, 0, 0.25)')
-    gradient.addColorStop(1, 'rgba(255, 0, 0, 0)')
+    //   datasets: [
+    //     {
+    //       label: 'Custom Label Name',
+    //       fillColor: gradient,
+    //       strokeColor: '#FC2525',
+    //       pointColor: 'white',
+    //       pointStrokeColor: 'rgba(220,220,220,1)',
+    //       pointHighlightFill: '#fff',
+    //       pointHighlightStroke: 'rgba(220,220,220,1)',
+    //       data: [65, 59, 80, 81, 56, 55]
+    //     }
+    //   ]
+    // }
+    // gradient.addColorStop(0, 'rgba(255, 0,0, 0.5)')
+    // gradient.addColorStop(0.5, 'rgba(255, 0, 0, 0.25)')
+    // gradient.addColorStop(1, 'rgba(255, 0, 0, 0)')
 
-    chart = new Chart(chart).Line(data)
+    // chart = new Chart(chart).Line(data)
   },
   components: {
     InputView,
@@ -90,18 +90,15 @@ export default {
       var data = {}
       if (url.charAt(0) >= 0 && url.charAt(0) <= 9 && url.charAt(url.length - 1) >= 0 && url.charAt(url.length - 1)) {
         data = { url: url }
-        console.log('ip address')
       } else {
         let text = url.split('//')
         let checkUrl = text[1].split('/')
         data = { url: checkUrl[0] }
-        console.log('www name host')
       }
       this.$http.post('http://localhost:4000/urlping/', data).then(res => {})
       var vm = this
       setTimeout(() => {
         vm.singleList(url)
-        vm.buildChart()
       }, 2000)
     },
     singleList (url) {
@@ -112,6 +109,7 @@ export default {
         } else if (this.single[0].data.alive === true) {
           this.messengerAlert = ''
         }
+        this.buildChart(this.single[0].data.time)
       })
     },
     getList () {
@@ -133,6 +131,29 @@ export default {
     },
     momentJs (time) {
       return moment(time).startOf().fromNow()
+    },
+    buildChart (time) {
+      var chart = document.getElementById('chart').getContext('2d')
+      var gradient = chart.createLinearGradient(0, 0, 0, 450)
+      var data = {
+        labels: [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June' ],
+        datasets: [
+          {
+            label: 'Custom Label Name',
+            fillColor: gradient,
+            strokeColor: '#FC2525',
+            pointColor: 'white',
+            pointStrokeColor: 'rgba(220,220,220,1)',
+            pointHighlightFill: '#fff',
+            pointHighlightStroke: 'rgba(220,220,220,1)',
+            data: [23, 10, 11, 3, 42, time]
+          }
+        ]
+      }
+      gradient.addColorStop(0, 'rgba(255, 0,0, 0.5)')
+      gradient.addColorStop(0.5, 'rgba(255, 0, 0, 0.25)')
+      gradient.addColorStop(1, 'rgba(255, 0, 0, 0)')
+      chart = new Chart(chart).Line(data)
     }
   }
 }
