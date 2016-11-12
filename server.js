@@ -20,9 +20,9 @@ app.use(bodyParser.urlencoded({extended: false}))
 
 var result = []
 var single = []
+
 app.post('/urlping', function (req, res) {
 	var host = []
-	single = []
 	host.push(req.body.url)
 	host.forEach(function (host) {
 		ping.promise.probe(host, { timeout: 80 }).then(function (res) { 
@@ -31,7 +31,6 @@ app.post('/urlping', function (req, res) {
 				data: res
 			}
 			result.push(data)
-			single.push(data)
 		})
 	})
 	if (req.body.url) res.send('ok url loading ping : www.' + req.body.url)
@@ -41,7 +40,25 @@ app.post('/urlping', function (req, res) {
 app.get('/api/data', function (req, res) {
 	res.send(result)
 })
-
+app.post('/api/single', function (req, res) {
+	let host = []
+	host.push(req.body.url)
+	host.forEach(function (host) {
+		ping.promise.probe(host, { timeout: 80 }).then(function (res) { 
+			let data = {
+				id: Date.now(),
+				data: res
+			}
+			single.push(data)
+		})
+	})
+	if (req.body.url) res.send('ok url loading ping : www.' + req.body.url)
+	else res.send('not ok url error')
+})
+app.delete('/api/single', function (req, res) {
+	single = []
+	res.send(single)
+})
 app.get('/api/single', function (req, res) {
 	res.send(single)
 })

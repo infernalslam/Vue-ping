@@ -11,8 +11,8 @@
 		</div>
 	     <div class="row">
 	        <div class="col-xs-4"><view-list :pingList="pingList" :clear="clear" :momentJs="momentJs"></view-list></div>
-	        <div class="col-xs-4"><graph-view :singleList="single" :messengerAlert="messengerAlert"></graph-view></div>
-	        <div class="col-xs-4"><div id='myChart'></div></div>
+	        <div class="col-xs-4"><graph-view :single="single" :messengerAlert="messengerAlert"></graph-view></div>
+	        <div class="col-xs-4"><button @click="repeat()"> Repeart</button></div>
       </div>
       </div>
     </div>
@@ -56,29 +56,6 @@ export default {
     setInterval(() => {
       vm.getList()
     }, 4000)
-    // var chart = document.getElementById('chart').getContext('2d')
-    // var gradient = chart.createLinearGradient(0, 0, 0, 450)
-    // var data = {
-    //   labels: [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June' ],
-
-    //   datasets: [
-    //     {
-    //       label: 'Custom Label Name',
-    //       fillColor: gradient,
-    //       strokeColor: '#FC2525',
-    //       pointColor: 'white',
-    //       pointStrokeColor: 'rgba(220,220,220,1)',
-    //       pointHighlightFill: '#fff',
-    //       pointHighlightStroke: 'rgba(220,220,220,1)',
-    //       data: [65, 59, 80, 81, 56, 55]
-    //     }
-    //   ]
-    // }
-    // gradient.addColorStop(0, 'rgba(255, 0,0, 0.5)')
-    // gradient.addColorStop(0.5, 'rgba(255, 0, 0, 0.25)')
-    // gradient.addColorStop(1, 'rgba(255, 0, 0, 0)')
-
-    // chart = new Chart(chart).Line(data)
   },
   components: {
     InputView,
@@ -87,6 +64,7 @@ export default {
   },
   methods: {
     ping (url) {
+      this.count = 0
       var data = {}
       if (url.charAt(0) >= 0 && url.charAt(0) <= 9 && url.charAt(url.length - 1) >= 0 && url.charAt(url.length - 1)) {
         data = { url: url }
@@ -98,18 +76,33 @@ export default {
       this.$http.post('http://localhost:4000/urlping/', data).then(res => {})
       var vm = this
       setTimeout(() => {
-        vm.singleList(url)
+        vm.singleList(url, data)
       }, 2000)
+      setTimeout(() => {
+        vm.singleList(url, data)
+      }, 3000)
+      setTimeout(() => {
+        vm.singleList(url, data)
+      }, 4000)
+      setTimeout(() => {
+        vm.singleList(url, data)
+      }, 5000)
+      setTimeout(() => {
+        vm.singleList(url, data)
+      }, 6000)
+      setTimeout(() => {
+        vm.singleList(url, data)
+      }, 7000)
+      setTimeout(() => {
+        vm.singleList(url, data)
+      }, 8000)
     },
-    singleList (url) {
+    singleList (url, data) {
+      console.log(url, data)
+      this.$http.post('http://localhost:4000/api/single', data).then(res => {})
       this.$http.get('http://localhost:4000/api/single').then(res => {
         this.single = res.data
-        if (this.single[0].data.alive === false) {
-          this.messengerAlert = 'Pls check ip address'
-        } else if (this.single[0].data.alive === true) {
-          this.messengerAlert = ''
-        }
-        this.buildChart(this.single[0].data.time)
+        this.buildChart(this.single)
       })
     },
     getList () {
@@ -132,11 +125,11 @@ export default {
     momentJs (time) {
       return moment(time).startOf().fromNow()
     },
-    buildChart (time) {
+    buildChart () {
       var chart = document.getElementById('chart').getContext('2d')
       var gradient = chart.createLinearGradient(0, 0, 0, 450)
       var data = {
-        labels: [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June' ],
+        labels: [ '1', '2', '3', '4', '5', '6' ],
         datasets: [
           {
             label: 'Custom Label Name',
@@ -146,7 +139,33 @@ export default {
             pointStrokeColor: 'rgba(220,220,220,1)',
             pointHighlightFill: '#fff',
             pointHighlightStroke: 'rgba(220,220,220,1)',
-            data: [23, 10, 11, 3, 42, time]
+            data: this.single.map(item => item.data.time)
+          }
+        ]
+      }
+      gradient.addColorStop(0, 'rgba(255, 0,0, 0.5)')
+      gradient.addColorStop(0.5, 'rgba(255, 0, 0, 0.25)')
+      gradient.addColorStop(1, 'rgba(255, 0, 0, 0)')
+      chart = new Chart(chart).Line(data)
+    },
+    repeat () {
+      this.$http.delete('http://localhost:4000/api/single').then(res => {
+        this.single = res.data
+      })
+      var chart = document.getElementById('chart').getContext('2d')
+      var gradient = chart.createLinearGradient(0, 0, 0, 450)
+      var data = {
+        labels: [ '1', '2', '3', '4', '5', '6' ],
+        datasets: [
+          {
+            label: 'Custom Label Name',
+            fillColor: gradient,
+            strokeColor: '#FC2525',
+            pointColor: 'white',
+            pointStrokeColor: 'rgba(220,220,220,1)',
+            pointHighlightFill: '#fff',
+            pointHighlightStroke: 'rgba(220,220,220,1)',
+            data: [0, 0, 0, 0, 0, 0]
           }
         ]
       }
